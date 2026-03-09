@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// --- MICROSSERVIÇO DE LOGIN E AUTENTICAÇÃO ---
+
+model Role {
+  id       Int       @id @default(autoincrement())
+  nome     String    @unique // Ex: "ADMIN", "CORRETOR", "LOCADOR"
+  usuarios Usuario[] 
+}
+
+model Usuario {
+  id             Int            @id @default(autoincrement())
+  nome           String
+  email          String         @unique
+  senha          String         // Aqui guardaremos a senha com hash (bcrypt)
+  
+  id_role        Int
+  role           Role           @relation(fields: [id_role], references: [id])
+  
+  refreshTokens  RefreshToken[]
+}
+
+model RefreshToken {
+  id             Int      @id @default(autoincrement())
+  token          String   @unique
+  data_expiracao DateTime
+  status         Boolean  @default(true) // true = ativo, false = revogado
+  
+  id_usuario     Int
+  usuario        Usuario  @relation(fields: [id_usuario], references: [id])
+}
