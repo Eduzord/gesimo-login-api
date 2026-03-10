@@ -1,7 +1,7 @@
-import {PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({
-    datasourceUrl: process.env.DATABASE_URL,
-})
+  log: ['query', 'info', 'warn', 'error'] // Mantemos os logs que são ótimos!
+});
 
-export default prisma
+export default prisma;
